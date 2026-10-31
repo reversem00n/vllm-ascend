@@ -102,7 +102,12 @@ def get_chip_type() -> str:
         chip_type = get_value_from_lines(chip_info_lines, "Chip Type")
         npu_name = get_value_from_lines(chip_info_lines, "NPU Name")
 
-        if "310" in chip_name:
+        if hardware.is_legacy_ascend310(chip_name):
+            raise RuntimeError(
+                "Detected first-generation Ascend 310, which is not the same device as Ascend 310P. "
+                "This vLLM-Ascend source tree currently supports 310P only; do not build it with SOC_VERSION=ascend310p1."
+            )
+        elif "310p" in chip_name.lower():
             # 310P case
             assert chip_type
             return (chip_type + chip_name).lower()

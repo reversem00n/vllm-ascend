@@ -50,6 +50,17 @@ _SOC_VERSION_TO_DEVICE_TYPE = {
 }
 
 
+def is_legacy_ascend310(chip_name: str) -> bool:
+    """Return whether a chip name identifies first-generation Ascend 310.
+
+    Ascend 310P is a distinct product family and must not be inferred from a
+    generic ``310`` substring.
+    """
+
+    normalized = chip_name.lower().replace(" ", "").replace("-", "")
+    return "310" in normalized and "310p" not in normalized
+
+
 def device_type_from_soc_version(soc_version: str) -> AscendDeviceType:
     """Resolve a build-time SOC_VERSION value to a hardware family."""
 

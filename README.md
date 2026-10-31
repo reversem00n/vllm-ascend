@@ -74,6 +74,14 @@ Whether you are a performance tuner looking to deploy vLLM-Ascend in production 
     - PyTorch == 2.10.0, TorchNPU == 2.10.0.post4
     - vLLM (the same version as vllm-ascend)
 
+## Legacy Ascend 310 status
+
+This fork does **not** yet support first-generation Ascend 310. That device is distinct from Ascend 310P; the upstream `Dockerfile.310p` and `SOC_VERSION=ascend310p1` target 310P hardware and must not be used as a substitute. This branch currently adds only a clear build-time distinction so classic 310 is not misdetected as 310P; it does not add a vLLM runtime, TorchNPU kernels, or INT8 inference support for classic 310.
+
+The Ascend AI1s test VM currently reports Ubuntu 18.04, Python 3.7, CANN 20.0.RC1 / driver 1.73.5.1, and an Ascend 310. The current vLLM-Ascend package requires Python 3.10+ and its documented 310P image uses a newer CANN/PyTorch/TorchNPU stack. The VM has none of `torch`, `torch_npu`, `vllm`, or Docker installed, so a 2B INT8 vLLM run is not currently possible on it. Supporting this target needs a compatible TorchNPU/CANN integration and 310-specific kernels before model serving can be tested.
+
+Do not set `SOC_VERSION=ascend310p1` on a classic Ascend 310 host. The build now stops with an explicit unsupported-device error instead of treating the two chips as interchangeable.
+
 ## Accessing Ascend NPU
 
 If you need to access Ascend NPU computing resources for development or testing, please visit the [HiDevLab - Online Development](https://hidevlab.huawei.com/online-develop-intro) page on the HiDevLab platform to apply for and use them.

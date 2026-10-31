@@ -77,6 +77,14 @@ vLLM 昇腾插件 (`vllm-ascend`) 是一个由社区维护的让vLLM在 Huawei A
     - PyTorch == 2.10.0, TorchNPU == 2.10.0.post4
     - vLLM (与vllm-ascend版本一致)
 
+## 旧款 Ascend 310 支持状态
+
+此 fork **尚未支持第一代 Ascend 310**。它与 Ascend 310P 是不同芯片；上游的 `Dockerfile.310p` 和 `SOC_VERSION=ascend310p1` 面向 310P，不能直接用于经典 310。本分支目前只增加了构建时的明确区分，避免把经典 310 误判为 310P；尚未实现经典 310 所需的 vLLM 运行时、TorchNPU 算子或 INT8 推理支持。
+
+目前 Ascend AI1s 测试 VM 的环境为 Ubuntu 18.04、Python 3.7、CANN 20.0.RC1 / driver 1.73.5.1 和 Ascend 310。当前 vLLM-Ascend 包要求 Python 3.10+，其文档中的 310P 镜像使用更新的 CANN/PyTorch/TorchNPU 软件栈。VM 上也没有安装 `torch`、`torch_npu`、`vllm` 或 Docker，因此目前无法在该 VM 上运行 vLLM 版 2B INT8 模型。要支持此硬件，必须先提供兼容的 TorchNPU/CANN 集成和 310 专用算子，之后才能测试模型服务。
+
+请勿在经典 Ascend 310 主机上设置 `SOC_VERSION=ascend310p1`。现在构建会显示明确的“不支持此设备”错误，而不会把两种芯片混为一谈。
+
 ## 访问昇腾NPU
 
 如果您需要访问昇腾NPU算力资源进行开发或测试，请进入HiDevLab平台的[HiDevLab-在线开发](https://hidevlab.huawei.com/online-develop-intro) 页面申请并使用算力。
